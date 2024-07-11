@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Add New Category</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+</head>
+<style>
+p {
+	font-size: small;
+	padding-left: 15px;
+}
+</style>
+<body>
+	<div class="container d-flex py-5 gap-5 justify-content-center">
+		<div
+			class="card border-0 bg-light p-5 rounded-4 shadow w-50 d-flex gap-4">
+			<h2 class="card-title text-center">Add New Category</h2>
+			<form th:action="@{|${appUrl}/user/category/addNewCategory|}" method="post" class="d-flex flex-column gap-4"
+				th:object="${categoryRegisterDto}">
+				<div class="form-group d-flex flex-column">
+					<input class="form-control" placeholder="Set the Catefory Name"
+						th:field="*{categoryName}">
+					<p th:if="${#fields.hasErrors('categoryName')}"
+						th:errors="*{categoryName}" th:errorclass="text-danger"></p>
+				</div>
+				<div class="d-flex justify-content-center gap-5">
+					<a class="btn btn-danger px-3"
+						th:href="${referer != null ? referer : '/shell/user/dashboard'}">Cancel</a>
+					<button class="btn btn-primary px-3">Create New Product</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

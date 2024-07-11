@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Manage User</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<style>
+.navbar-profile {
+	height: 40px;
+	width: 40px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+p {
+	font-size: small;
+}
+</style>
+</head>
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+	<div class="container py-5 d-flex flex-column gap-5">
+		<div
+			class="card d-flex flex-column border-0 rounded-4 p-5 bg-light shadow">
+			<h2 class="card-title">Update User Info</h2>
+			<div class="card-body">
+				<div class="d-flex flex-column gap-5">
+					<span class="card-text">If you want to your change others
+						Accounts Informations or Details you can Update or If you don't
+						want or your facing any issue with Others Account. You can Delete
+						their Account.</span>
+					<form th:action="@{|${appUrl}/user/findByUserEmail|}"
+						class="w-50 card border-warning rounded-4 bg-light p-4 d-flex gap-2"
+						method="post">
+						<h3 class="text-center">Find Account to Update or Delete</h3>
+						<div class="form-group d-flex gap-4">
+							<input class="form-control"
+								placeholder="Enter the account E-mail" type="email"
+								required="required" name="userEmail">
+							<div>
+								<button class="btn btn-outline-primary px-4" type="submit">Find</button>
+							</div>
+						</div>
+						<p th:text="${userNotFounded}" class="text-danger px-4"></p>
+					</form>
+					<div class="card border-danger p-5 bg-light rounded-4"
+						th:if="${findedAccount != null}">
+						<h2 class="card-title">Finded Account</h2>
+						<div class="card-body" th:object="${findedAccount}">
+							<div
+								class="card border-0 bg-light rounded-4 p-5 d-flex flex-column gap-3 w-50">
+								<img th:alt="${findedAccount.userName}" class="card-img"
+									th:src="@{/shell/user/getProfilePicture/{accountId}(accountId=${findedAccount.accountId})}">
+								<div>
+									<p class="card-title fw-bold fs-2"
+										th:text="${findedAccount.userName}"></p>
+									<p class="card-text fs-5" th:text="${findedAccount.userEmail}"></p>
+								</div>
+								<div class="d-flex gap-5"><a
+										th:href="@{|${appUrl}/user/deleteAccountInfoByAccountId/${findedAccount.accountId}|}"
+										class="btn btn-danger px-3">Delete Account</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card p-5 bg-light border-0 rounded-4 shadow">
+			<h2 class="card-title">Create New Admin</h2>
+			<div class="card-body">
+				<p class="card-text">Create New Accounts in Db</p>
+				<div class="d-flex gap-5">
+					<a class="btn btn-primary"
+						th:href="@{|${appUrl}/user/register/admin|}">Create Admin</a> <a
+						class="btn btn-warning"
+						th:href="@{|${appUrl}/user/register/manager|}">Create Manager</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
