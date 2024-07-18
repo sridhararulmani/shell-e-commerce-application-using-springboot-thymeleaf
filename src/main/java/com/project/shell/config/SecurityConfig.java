@@ -29,8 +29,6 @@ public class SecurityConfig {
 									appUrl +"/app/register/user",
 									appUrl +"/app/register/seller",
 									
-									appUrl + "/roles/**",
-									
 									appUrl + "/user/register/user",
 									appUrl + "/user/register/seller")
 									.permitAll();

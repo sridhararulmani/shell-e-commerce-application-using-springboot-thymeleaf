@@ -64,10 +64,6 @@ public class AccountController {
 
 		Account account = new Account();
 		account.getRoles().add(roleRepository.findByRole("ROLE_USER"));
-
-		account.getRoles().add(roleRepository.findByRole("ROLE_MANAGER"));
-		account.getRoles().add(roleRepository.findByRole("ROLE_ADMIN"));
-		account.getRoles().add(roleRepository.findByRole("ROLE_SELLER"));
 		
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
