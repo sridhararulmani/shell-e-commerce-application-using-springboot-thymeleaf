@@ -1,17 +1,16 @@
 package com.project.shell.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.context.annotation.Scope;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Scope(value = "prototype")
@@ -21,8 +20,8 @@ public class Category {
 	private Long categoryId;
 	private String categoryName;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Product> products = new ArrayList<>();
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private Set<Product> products = new HashSet<>();
 
 	public Long getCategoryId() {
 		return categoryId;
@@ -40,12 +39,12 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
-	public List<Product> getProducts() {
+	public Set<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<Product> products) {
+	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
-	
+
 }

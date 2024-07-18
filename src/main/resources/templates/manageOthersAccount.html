@@ -40,7 +40,7 @@ p {
 						<div class="form-group d-flex gap-4">
 							<input class="form-control"
 								placeholder="Enter the account E-mail" type="email"
-								required="required" name="userEmail">
+								name="userEmail">
 							<div>
 								<button class="btn btn-outline-primary px-4" type="submit">Find</button>
 							</div>
@@ -60,8 +60,9 @@ p {
 										th:text="${findedAccount.userName}"></p>
 									<p class="card-text fs-5" th:text="${findedAccount.userEmail}"></p>
 								</div>
-								<div class="d-flex gap-5"><a
-										th:href="@{|${appUrl}/user/deleteAccountInfoByAccountId/${findedAccount.accountId}|}"
+								<div class="d-flex gap-5">
+									<a
+										th:href="@{/shell/user/deleteFindedAccount/{accountId}(accountId=${findedAccount.accountId})}"
 										class="btn btn-danger px-3">Delete Account</a>
 								</div>
 							</div>

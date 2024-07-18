@@ -1,7 +1,7 @@
 package com.project.shell.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.context.annotation.Scope;
 
@@ -12,6 +12,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -30,10 +32,11 @@ public class Account {
 	private byte[] userProfile;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private List<Role> roles = new ArrayList<>();
+	@JoinTable(name = "accounts_roles", joinColumns = @JoinColumn(referencedColumnName = "accountId"), inverseJoinColumns = @JoinColumn(referencedColumnName = "roleId"))
+	private Set<Role> roles = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	public List<Product> products = new ArrayList<>();
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	public Set<Product> products = new HashSet<>();
 
 	public Long getAccountId() {
 		return accountId;
@@ -75,19 +78,19 @@ public class Account {
 		this.userProfile = userProfile;
 	}
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
-	public List<Product> getProducts() {
+	public Set<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<Product> products) {
+	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
 

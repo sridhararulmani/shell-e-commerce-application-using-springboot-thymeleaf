@@ -22,21 +22,21 @@
 	<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 	<div class="container py-5 d-flex flex-column gap-5">
-		<div class="card border-0 rounded-4 p-5 bg-light shadow">
-			<h2 class="card-title">Update Account Info</h2>
+		<div class="card bg-light rounded-4 border-0 p-5 shadow">
+			<h2 class="card-title fs-3">Update Account Info</h2>
 			<div class="card-body">
 				<p class="card-text">If you want to your change your Account
 					Informations or Details you can Update it.</p>
-				<a class="btn btn-primary px-3">Update Account</a>
+				<a class="btn rounded-3 btn-primary px-3"
+					th:href="@{|${appUrl}/user/updateAccountInfo|}">Update Account</a>
 			</div>
-		</div>
-		<div class="card border-0 rounded-4 p-5 bg-light shadow" th:if="${ isAdmin != true}">
-			<h2 class="card-title">Delete Account</h2>
+			<hr>
+			<h2 class="card-title fs-3">Delete Account</h2>
 			<div class="card-body">
 				<p class="card-text">If you don't want or your facing any issue
 					with your Account. Delete Account</p>
-				<a class="btn btn-danger px-3"
-					th:href="@{|${appUrl}/user/passwordConfirm?path=process_delete|}">Delete Account</a>
+				<a class="btn rounded-3 btn-danger px-3"
+					th:href="@{/shell/user/passwordConfirm?path=deleteMyAccount}">Delete My Account</a>
 			</div>
 		</div>
 	</div>

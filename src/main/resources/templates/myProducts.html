@@ -55,8 +55,10 @@ p {
 						th:text="'Rating : '+${product.productRating}"></h6>
 					<p class="card-text" th:text="${product.productDescription}"></p>
 					<div class="d-flex gap-4">
-						<a class="btn btn-primary px-3">Update</a> <a
-							class="btn btn-outline-danger px-3">Delete</a>
+						<a class="btn btn-primary px-3"
+							th:href="@{/shell/user/product/updateProductById/{productId}(productId=${product.productId})}">Update</a>
+						<a class="btn btn-outline-danger px-3"
+							th:href="@{/shell/user/product/deleteProductById/{productId}(productId=${product.productId})}">Delete</a>
 					</div>
 				</div>
 			</div>

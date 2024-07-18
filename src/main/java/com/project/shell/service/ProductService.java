@@ -20,4 +20,8 @@ public interface ProductService {
 
 	public Optional<Product> findProductById(Long productId);
 
+	public void updateProduct(Product product);
+
+	public void deleteProductById(Long productId);
+
 }

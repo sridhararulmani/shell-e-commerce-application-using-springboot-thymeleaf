@@ -30,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
 			Account account) {
 		Product product = new Product();
 		Category category = categoryRepository.findById(productRegisterDto.getCategoryId()).get();
+
 		product.setAccount(account);
 		product.setProductName(productRegisterDto.getProductName());
 		product.setProductPrice(productRegisterDto.getProductPrice());
@@ -37,8 +38,10 @@ public class ProductServiceImpl implements ProductService {
 		product.setProductDescription(productRegisterDto.getProductDescription());
 		product.setProductRating(4);
 		product.setProductImage(productImageBytes);
+		product.setCategory(category);
+
 		account.getProducts().add(product);
-		category.getProducts().add(product);
+
 		return productRepository.save(product);
 	}
 
@@ -50,5 +53,15 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Optional<Product> findProductById(Long productId) {
 		return productRepository.findById(productId);
+	}
+
+	@Override
+	public void updateProduct(Product product) {
+		productRepository.save(product);
+	}
+
+	@Override
+	public void deleteProductById(Long productId) {
+		productRepository.deleteById(productId);
 	}
 }

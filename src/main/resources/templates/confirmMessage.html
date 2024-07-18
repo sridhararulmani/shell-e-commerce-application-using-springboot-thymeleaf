@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Shell | Please Confirm</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<style>
+.navbar-profile {
+	height: 40px;
+	width: 40px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+</style>
+</head>
+<body>
+	<div th:replace="~{fragments/navbar :: navbar}"></div>
+	<div class="container py-5 d-flex flex-column gap-5 align-items-center">
+		<div
+			class="card border-0 bg-light rounded-4 w-50 d-flex flex-column p-5 shadow">
+			<h2 class="card-title text-center">Please Confirm</h2>
+			<div class="card-body d-flex flex-column gap-3">
+				<p class="card-text" th:text="${message}"></p>
+				<div
+					class="d-flex flex-row gap-5 align-items-center justify-content-center">
+					<a class="btn btn-danger px-4 rounded-3"
+						th:href="${referer != null ? referer : '${appUrl}/user/dashboard'}">No</a>
+					<a class="btn btn-success px-4 rounded-3"
+						th:href="@{/shell/user/deleteAccountInfoByAccountId/{accountId}(accountId=${accountId})}">Yes</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

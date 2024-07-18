@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.shell.dto.ProductRegisterDto;
+import com.project.shell.dto.ProductUpdateDto;
 import com.project.shell.entity.Account;
 import com.project.shell.entity.Category;
 import com.project.shell.entity.Product;
@@ -49,11 +50,6 @@ public class ProductController {
 
 	@Autowired
 	private AccountService accountService;
-
-	@GetMapping("/getAllProduct")
-	public String loadGetAllProductPageWithProducts() {
-		return "productsMenu";
-	}
 
 	@GetMapping("/addNewProduct")
 	public String addNewProductPageLoder(@RequestHeader(value = "referer", required = false) String referer,
@@ -115,9 +111,68 @@ public class ProductController {
 	@GetMapping("/getMyProducts")
 	public String loadMyProductsPage(@AuthenticationPrincipal User user, Model model) {
 		Account account = accountService.findByUserEmail(user.getUsername()).get();
-		
+
 		model.addAttribute("user", account);
 		model.addAttribute("products", account.getProducts());
 		return "myProducts";
+	}
+
+	@GetMapping("/updateProductById/{productId}")
+	public String loadUpdateProductByIdPage(@AuthenticationPrincipal User user, Model model,
+			@PathVariable(value = "productId") Long productId, ProductUpdateDto productUpdateDto,
+			@RequestHeader(value = "referer", required = false) String referer) {
+		Product product = productService.findProductById(productId).get();
+
+		productUpdateDto.setProductName(product.getProductName());
+		productUpdateDto.setProductPrice(product.getProductPrice());
+		productUpdateDto.setProductDiscount(product.getProductDiscount());
+		productUpdateDto.setProductDescription(product.getProductDescription());
+
+		model.addAttribute("product", product);
+		model.addAttribute("user", accountService.findByUserEmail(user.getUsername()).get());
+		model.addAttribute("productUpdateDto", productUpdateDto);
+		model.addAttribute("referer", referer);
+		return "updateProduct";
+	}
+
+	@PostMapping("/updateProduct/{productId}")
+	public String updateProductById(@AuthenticationPrincipal User user, Model model,
+			@Valid @ModelAttribute ProductUpdateDto productUpdateDto, BindingResult bindingResult,
+			@RequestParam(value = "productImage") MultipartFile productImage,
+			@PathVariable(value = "productId") Long productId) throws IOException {
+		Product product = productService.findProductById(productId).get();
+		model.addAttribute("product", product);
+		model.addAttribute("user", accountService.findByUserEmail(user.getUsername()).get());
+		if (bindingResult.hasErrors()) {
+			return "updateProduct";
+		}
+		if (!productImage.isEmpty()) {
+			product.setProductImage(productImage.getBytes());
+		}
+		product.setProductName(productUpdateDto.getProductName());
+		product.setProductPrice(productUpdateDto.getProductPrice());
+		product.setProductDiscount(productUpdateDto.getProductDiscount());
+		product.setProductDescription(productUpdateDto.getProductDescription());
+		productService.updateProduct(product);
+		return "redirect:" + appUrl + "/user/product/getMyProducts";
+	}
+
+	@GetMapping("/deleteProductById/{productId}")
+	public String loadConfirmMessagePageToAskForDelete(@AuthenticationPrincipal User user, Model model,
+			@PathVariable(value = "productId") Long productId,
+			@RequestHeader(value = "referer", required = false) String referer) {
+		model.addAttribute("product", productService.findProductById(productId).get());
+		model.addAttribute("user", accountService.findByUserEmail(user.getUsername()).get());
+		model.addAttribute("referer", referer);
+		model.addAttribute("message", "Are you sure, You want to delete the Product");
+		return "confirmMessageToDeleteProduct";
+	}
+
+	@GetMapping("/deleteProduct/{productId}")
+	public String deleteProductById(@PathVariable(value = "productId") Long productId,
+			@AuthenticationPrincipal User user) {
+		Product product = productService.findProductById(productId).get();
+		productService.deleteProductById(product.getProductId());
+		return "redirect:" + appUrl + "/user/product/getMyProducts";
 	}
 }

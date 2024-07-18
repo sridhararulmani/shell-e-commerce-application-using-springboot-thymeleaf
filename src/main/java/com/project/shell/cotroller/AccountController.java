@@ -1,8 +1,8 @@
 package com.project.shell.cotroller;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.shell.dto.AccountRegisterDto;
+import com.project.shell.dto.UpdateAccountInfoDto;
 import com.project.shell.entity.Account;
 import com.project.shell.entity.Role;
 import com.project.shell.repository.RoleRepository;
@@ -53,7 +54,6 @@ public class AccountController {
 	public String registerUser(@Valid @ModelAttribute AccountRegisterDto accountRegisterDto,
 			BindingResult bindingResult, @RequestParam(value = "userProfile") MultipartFile multipartFile,
 			@RequestParam(value = "passwordConfirm") String passwordConfirm, Model model) throws IOException {
-
 		if (!passwordConfirm.equals(accountRegisterDto.getUserPassword())) {
 			model.addAttribute("passwordMissMatch", "Your Confirmed Password and User Password Not Matched");
 			return "registerUser";
@@ -63,8 +63,12 @@ public class AccountController {
 		}
 
 		Account account = new Account();
-
 		account.getRoles().add(roleRepository.findByRole("ROLE_USER"));
+
+		account.getRoles().add(roleRepository.findByRole("ROLE_MANAGER"));
+		account.getRoles().add(roleRepository.findByRole("ROLE_ADMIN"));
+		account.getRoles().add(roleRepository.findByRole("ROLE_SELLER"));
+		
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
 		account.setUserPassword(passwordEncoder.encode(accountRegisterDto.getUserPassword()));
@@ -72,7 +76,7 @@ public class AccountController {
 			account.setUserProfile(multipartFile.getBytes());
 		}
 		accountService.save(account);
-		return "redirect:" + appUrl + "/app/dashboard";
+		return "redirect:" + appUrl + "/user/dashboard";
 
 	}
 
@@ -80,7 +84,6 @@ public class AccountController {
 	public String registerSeller(@Valid @ModelAttribute AccountRegisterDto accountRegisterDto,
 			BindingResult bindingResult, @RequestParam(value = "userProfile") MultipartFile multipartFile,
 			@RequestParam(value = "passwordConfirm") String passwordConfirm, Model model) throws IOException {
-
 		if (!passwordConfirm.equals(accountRegisterDto.getUserPassword())) {
 			model.addAttribute("passwordMissMatch", "Your Confirmed Password and User Password Not Matched");
 			return "registerSeller";
@@ -92,7 +95,6 @@ public class AccountController {
 		Account account = new Account();
 
 		account.getRoles().add(roleRepository.findByRole("ROLE_USER"));
-
 		account.getRoles().add(roleRepository.findByRole("ROLE_SELLER"));
 
 		account.setUserName(accountRegisterDto.getUserName());
@@ -102,7 +104,7 @@ public class AccountController {
 			account.setUserProfile(multipartFile.getBytes());
 		}
 		accountService.save(account);
-		return "redirect:" + appUrl + "/app/dashboard";
+		return "redirect:" + appUrl + "/user/dashboard";
 
 	}
 
@@ -138,7 +140,6 @@ public class AccountController {
 	public String registerManager(@Valid @ModelAttribute AccountRegisterDto accountRegisterDto,
 			BindingResult bindingResult, @RequestParam(value = "userProfile") MultipartFile multipartFile,
 			@RequestParam(value = "passwordConfirm") String passwordConfirm, Model model) throws IOException {
-
 		if (!passwordConfirm.equals(accountRegisterDto.getUserPassword())) {
 			model.addAttribute("passwordMissMatch", "Your Confirmed Password and User Password Not Matched");
 			return "registerUser";
@@ -235,33 +236,36 @@ public class AccountController {
 
 	@GetMapping("/dashboard")
 	public String loadUserDashboar(@AuthenticationPrincipal User user, Model model) {
+		Optional<Account> optional = accountService.findByUserEmail(user.getUsername());
+		if (optional.isPresent()) {
+			Account account = optional.get();
+			model.addAttribute("user", account);
+			Set<Role> currentUserRoles = account.getRoles();
+			Role userRoleOptional = roleRepository.findByRole("ROLE_USER");
+			Role managerRoleOptional = roleRepository.findByRole("ROLE_MANAGER");
+			Role adminRoleOptional = roleRepository.findByRole("ROLE_ADMIN");
+			Role sellerRoleOptional = roleRepository.findByRole("ROLE_SELLER");
 
-		Account account = accountService.findByUserEmail(user.getUsername()).get();
+			if (currentUserRoles.contains(userRoleOptional)) {
+				System.out.println("isUser");
+				model.addAttribute("isUser", true);
+			}
+			if (currentUserRoles.contains(sellerRoleOptional)) {
+				System.out.println("isSeller");
+				model.addAttribute("isSeller", true);
+			}
+			if (currentUserRoles.contains(adminRoleOptional)) {
+				System.out.println("isAdmin");
+				model.addAttribute("isAdmin", true);
+			}
+			if (currentUserRoles.contains(managerRoleOptional)) {
+				System.out.println("isManager");
+				model.addAttribute("isManager", true);
+			}
+			return "userDashboard";
+		}
+		return "redirect:" + appUrl + "/app/login";
 
-		model.addAttribute("user", account);
-		List<Role> currentUserRoles = account.getRoles();
-		Role userRoleOptional = roleRepository.findByRole("ROLE_USER");
-		Role managerRoleOptional = roleRepository.findByRole("ROLE_MANAGER");
-		Role adminRoleOptional = roleRepository.findByRole("ROLE_ADMIN");
-		Role sellerRoleOptional = roleRepository.findByRole("ROLE_SELLER");
-
-		if (currentUserRoles.contains(userRoleOptional)) {
-			System.out.println("isUser");
-			model.addAttribute("isUser", true);
-		}
-		if (currentUserRoles.contains(sellerRoleOptional)) {
-			System.out.println("isSeller");
-			model.addAttribute("isSeller", true);
-		}
-		if (currentUserRoles.contains(adminRoleOptional)) {
-			System.out.println("isAdmin");
-			model.addAttribute("isAdmin", true);
-		}
-		if (currentUserRoles.contains(managerRoleOptional)) {
-			System.out.println("isManager");
-			model.addAttribute("isManager", true);
-		}
-		return "userDashboard";
 	}
 
 	@GetMapping("/manageAccount")
@@ -293,7 +297,7 @@ public class AccountController {
 		return "passwordConfirm";
 	}
 
-	@GetMapping("passwordChecked/manageOthersAccount")
+	@GetMapping("/passwordChecked/manageOthersAccount")
 	public String manageUserPageLoder(@AuthenticationPrincipal User user, Model model) {
 		Optional<Account> optional = accountService.findByUserEmail(user.getUsername());
 		if (optional.isPresent()) {
@@ -301,6 +305,84 @@ public class AccountController {
 			model.addAttribute("user", account);
 		}
 		return "manageOthersAccount";
+	}
+
+	@GetMapping("/updateAccountInfo")
+	public String updateAccountInfoPageLoder(@AuthenticationPrincipal User user, Model model,
+			@RequestHeader(value = "referer", required = false) String referer,
+			UpdateAccountInfoDto updateAccountInfoDto) {
+		Account account = accountService.findByUserEmail(user.getUsername()).get();
+		model.addAttribute("user", account);
+		model.addAttribute("referer", referer);
+		updateAccountInfoDto.setUserName(account.getUserName());
+		model.addAttribute("updateAccountInfoDto", updateAccountInfoDto);
+		return "updateAccountInfo";
+	}
+
+	@GetMapping("/passwordChecked/deleteMyAccount")
+	public String loadConfirmDetailsPageForDeleteMyAccount(@AuthenticationPrincipal User user, Model model,
+			@RequestHeader(value = "referer", required = false) String referer) {
+		Account account = accountService.findByUserEmail(user.getUsername()).get();
+
+		model.addAttribute("user", account);
+		model.addAttribute("referer", referer);
+		model.addAttribute("accountId", account.getAccountId());
+		model.addAttribute("message",
+				"Are you Sure! You want to Delete Your Account Permenently from Shell Application.");
+		return "confirmMessage";
+	}
+
+	@GetMapping("/deleteFindedAccount/{accountId}")
+	public String loadConfirmDetailsPageForDeleteFindedAccount(@AuthenticationPrincipal User user, Model model,
+			@RequestHeader(value = "referer", required = false) String referer,
+			@PathVariable(value = "accountId") Long findedAccountId) {
+		Account account = accountService.findByUserEmail(user.getUsername()).get();
+
+		Optional<Account> byId = accountService.findById(findedAccountId);
+		Account accountFindedById = byId.get();
+
+		model.addAttribute("user", account);
+		model.addAttribute("referer", referer);
+		model.addAttribute("accountId", accountFindedById.getAccountId());
+		model.addAttribute("message",
+				"Are you Sure! You want to Delete " + accountFindedById.getUserName() + " Account having Email Id with "
+						+ accountFindedById.getUserEmail() + " Permenently from Shell Application.");
+		return "confirmMessage";
+	}
+
+	@PostMapping("/updateAccountInfo")
+	public String updateAccountInfo(@Valid @ModelAttribute UpdateAccountInfoDto updateAccountInfoDto,
+			BindingResult bindingResult, Model model, @AuthenticationPrincipal User user,
+			@RequestHeader(value = "referer", required = false) String referer,
+			@RequestParam(value = "userProfile") MultipartFile userProfile) throws IOException {
+		Account account = accountService.findByUserEmail(user.getUsername()).get();
+
+		System.out.println("Updating Account");
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("user", account);
+			return "updateAccountInfo";
+		}
+		if (!userProfile.isEmpty() && userProfile != null) {
+			System.out.println(userProfile.getOriginalFilename());
+			System.out.println(userProfile.getBytes());
+			account.setUserProfile(userProfile.getBytes());
+		}
+		if (!updateAccountInfoDto.getUserName().isEmpty() && updateAccountInfoDto.getUserName() != null) {
+			System.out.println("Updating Account User Name");
+			account.setUserName(updateAccountInfoDto.getUserName());
+			accountService.save(account);
+			return "redirect:" + appUrl + "/user/getUserDetails";
+		}
+		if ((updateAccountInfoDto.getUserName() != null
+				&& !account.getUserName().equals(updateAccountInfoDto.getUserName()))
+				|| (!userProfile.isEmpty() && userProfile != null)) {
+			System.out.println("Updating Account Details Name or Profile");
+			accountService.save(account);
+			return "redirect:" + appUrl + "/user/getUserDetails";
+		} else {
+			return "redirect:" + appUrl + "/user/updateAccountInfo";
+		}
 	}
 
 	/* Password Checking Logic */
@@ -319,26 +401,24 @@ public class AccountController {
 	}
 
 	/* Delete Account Logic */
-	@GetMapping("/passwordChecked/process_delete")
-	public String deleteAcount(@AuthenticationPrincipal User user) {
-		Optional<Account> optional = accountService.findByUserEmail(user.getUsername());
-		Account account = optional.get();
-		account.getRoles().clear();
-		accountService.deleteById(account.getAccountId());
-		return "redirect:" + appUrl + "/app/dashboard";
-	}
-
 	@GetMapping("/deleteAccountInfoByAccountId/{accountId}")
 	public String deleteAccountInfoByAccountId(@AuthenticationPrincipal User user,
 			@PathVariable(value = "accountId") Long accountId, Model model) {
 		Optional<Account> optional = accountService.findById(accountId);
 		Account account = optional.get();
-		account.getRoles().clear();
-		accountService.deleteById(account.getAccountId());
 		Optional<Account> currentUserOptional = accountService.findByUserEmail(user.getUsername());
 		Account currentUser = currentUserOptional.get();
+
+		if (accountId == currentUser.getAccountId()) {
+			deleteAccountById(accountId, account);
+			return "redirect:" + appUrl + "/user/passwordChecked/process_logout";
+		}
+		deleteAccountById(accountId, account);
 		model.addAttribute("user", currentUser);
 		return "redirect:" + appUrl + "/user/dashboard";
 	}
 
+	public void deleteAccountById(Long accountId, Account account) {
+		accountService.deleteById(account.getAccountId());
+	}
 }
