@@ -17,15 +17,13 @@
 	border-radius: 50%;
 }
 
-.card-img {
-	height: 100px;
-	width: 100px;
-	object-fit: cover;
-	border-radius: 50%;
-}
-
 .menu-bar {
 	height: fit-content;
+}
+
+.count-card {
+	height: 150px;
+	width: 150px;
 }
 </style>
 <body>
@@ -49,12 +47,13 @@
 						Product</a>
 					<hr>
 					<a class="btn w-100 text-nowrap btn-light border-0 rounded-3"
-						th:href="@{|${appUrl}/user/product/getMyProducts|}">Show My Products</a>
+						th:href="@{|${appUrl}/user/product/getMyProducts|}">My
+						Products</a>
 				</div>
 				<div th:if="${isAdmin}">
 					<hr>
-					<a class="btn w-100 text-nowrap btn-light border-0 rounded-3">Manage
-						App issues</a>
+					<a class="btn w-100 text-nowrap btn-light border-0 rounded-3">
+						Issues</a>
 				</div>
 				<div th:if="${isManager}">
 					<hr>
@@ -72,36 +71,63 @@
 			</div>
 		</div>
 		<div class="reasent-news d-flex flex-column gap-5">
-			<div th:if="${isSeller}"
-				class="card bg-warning border-0 rounded-4 shadow p-5">
-				<h2 class="card-title">You Can't Buy Your Own Product.</h2>
-				<div class="card-body">
-					<p class="card-text">If your a Seller you can't Buy or purchese
-						your own products. Because your a part of Shell delar. But you can
-						Buy or Purchese Others Products. If you want to Buy your Own
-						Product better you can create new user account.</p>
+			<div class="d-flex flex-row flex-wrap gap-5 justify-content-center">
+				<div
+					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${totalAccountCount}+'+'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">Total Account's</label>
+				</div>
+				<div
+					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${userCount}+'+'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">User's</label>
+				</div>
+				<div
+					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${sellerCount}+'+'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">Seller's</label>
+				</div>
+				<div
+					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${adminCount}+'+'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">Admin's</label>
+				</div>
+				<div
+					class="count-card card d-flex border-0 flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${managerCount}+'+'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">Manager's</label>
 				</div>
 			</div>
-			<div class="card bg-light p-5 border-0 rounded-4 shadow">
-				<h2 class="card-title">Shell</h2>
-				<div class="card-body">
-					<p class="card-text">Shell is an Advance Project for User
-						Authentication and Authority using Spring Boot with Thymeleaf, We
-						introduce this software for you Provide a Bes Service for Shoping.
-						In All Over India with free Delivery for your Orders. In Advance
-						Features you can Start your Business with Shell.</p>
-				</div>
-			</div>
-			<div
-				class="card bg-secondary text-white p-5 border-0 rounded-4 shadow">
-				<h2 class="card-title">Business TieUp !</h2>
-				<div class="card-body">
-					<p class="card-text">Dear User, Now an Wonderful Opertunity is
-						available in Shell. To Build your Business with Shell application
-						to Sell Your Products By Using our Platform for complete Free.</p>
-				</div>
+		<div th:if="${isSeller}"
+			class="card bg-warning border-0 rounded-4 shadow p-5">
+			<h2 class="card-title">You Can't Buy Your Own Product.</h2>
+			<div class="card-body">
+				<p class="card-text">If your a Seller you can't Buy or purchese
+					your own products. Because your a part of Shell delar. But you can
+					Buy or Purchese Others Products. If you want to Buy your Own
+					Product better you can create new user account.</p>
 			</div>
 		</div>
+		<div class="card bg-light p-5 border-0 rounded-4 shadow">
+			<h2 class="card-title">Shell</h2>
+			<div class="card-body">
+				<p class="card-text">Shell is an Advance Project for User
+					Authentication and Authority using Spring Boot with Thymeleaf, We
+					introduce this software for you Provide a Bes Service for Shoping.
+					In All Over India with free Delivery for your Orders. In Advance
+					Features you can Start your Business with Shell.</p>
+			</div>
+		</div>
+		<div
+			class="card bg-secondary text-white p-5 border-0 rounded-4 shadow">
+			<h2 class="card-title">Business TieUp !</h2>
+			<div class="card-body">
+				<p class="card-text">Dear User, Now an Wonderful Opertunity is
+					available in Shell. To Build your Business with Shell application
+					to Sell Your Products By Using our Platform for complete Free.</p>
+			</div>
+		</div>
+	</div>
 	</div>
 </body>
 </html>

@@ -1,6 +1,8 @@
 package com.project.shell.cotroller;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -266,6 +268,15 @@ public class AccountController {
 			Role adminRoleOptional = roleRepository.findByRole("ROLE_ADMIN");
 			Role sellerRoleOptional = roleRepository.findByRole("ROLE_SELLER");
 
+			List<Account> accounts = accountService.findAllAccountsFromShell();
+			int totalShellAccountsCount = accounts.size();
+
+			int userAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(userRoleOptional)).count();
+			int adminAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(adminRoleOptional)).count();
+			int sellerAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(sellerRoleOptional)).count();
+			int managerAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(managerRoleOptional)).count();
+			
+			
 			if (currentUserRoles.contains(userRoleOptional)) {
 				System.out.println("isUser");
 				model.addAttribute("isUser", true);
@@ -281,6 +292,13 @@ public class AccountController {
 			if (currentUserRoles.contains(managerRoleOptional)) {
 				System.out.println("isManager");
 				model.addAttribute("isManager", true);
+			}
+			if (currentUserRoles.contains(managerRoleOptional) || currentUserRoles.contains(adminRoleOptional)) {
+				model.addAttribute("totalAccountCount", totalShellAccountsCount);
+				model.addAttribute("userCount", userAccountCount);
+				model.addAttribute("sellerCount", sellerAccountCount);
+				model.addAttribute("adminCount", adminAccountCount);
+				model.addAttribute("managerCount", managerAccountCount);
 			}
 			return "userDashboard";
 		}

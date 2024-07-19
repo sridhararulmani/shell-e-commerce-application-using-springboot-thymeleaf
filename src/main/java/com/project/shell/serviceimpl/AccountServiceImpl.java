@@ -1,5 +1,6 @@
 package com.project.shell.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,10 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void deleteById(Long accountId) {
 		accountRepository.deleteById(accountId);
+	}
+	
+	@Override
+	public List<Account> findAllAccountsFromShell() {
+		return accountRepository.findAll();
 	}
 }

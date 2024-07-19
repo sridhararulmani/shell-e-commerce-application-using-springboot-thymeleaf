@@ -25,6 +25,7 @@ p {
 				<h2 class="card-title text-center">Add New Product to Salse</h2>
 				<div class="form-grp d-flex flex-column gap-4">
 					<div class="group d-flex flex-column">
+					<label class="form-label">Select the Product Category</label>
 						<select class="form-control" th:field="*{categoryId}">
 							<optgroup label="Select the Category">
 								<option th:each="category : ${categories}"
@@ -36,24 +37,28 @@ p {
 							th:errors="*{categoryId}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Enter Product Name</label>
 						<input class="form-control" type="text" placeholder="Prodcut Name"
 							th:field="*{productName}">
 						<p th:if="${#fields.hasErrors('productName')}"
 							th:errors="*{productName}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Enter Product Price</label>
 						<input class="form-control" type="number"
 							th:field="*{productPrice}" placeholder="Product Price">
 						<p th:if="${#fields.hasErrors('productPrice')}"
 							th:errors="*{productPrice}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Enter Product Discount</label>
 						<input class="form-control" type="number"
 							th:field="*{productDiscount}" placeholder="Set Prodcut Discount">
 						<p th:if="${#fields.hasErrors('productDiscount')}"
 							th:errors="*{productDiscount}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Enter Product Description</label>
 						<textarea class="form-control"
 							placeholder="Set the Product Description by 3 to 15 Chaeacters"
 							th:field="*{productDescription}"></textarea>
@@ -61,6 +66,7 @@ p {
 							th:errors="*{productDescription}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="gropu d-flex flex-column">
+					<label class="form-label">Set Product Image</label>
 						<input type="file" placeholder="Set Product Image"
 							name="productImage" class="form-control">
 					</div>
@@ -70,7 +76,7 @@ p {
 						<a
 							th:href="${referer != null ? referer : '/shell/user/dashboard'}"
 							class="btn btn-danger">Cancel</a>
-						<button type="submit" class="btn btn-success">Sign In</button>
+						<button type="submit" class="btn btn-success">Create Product</button>
 					</div>
 				</div>
 			</form>

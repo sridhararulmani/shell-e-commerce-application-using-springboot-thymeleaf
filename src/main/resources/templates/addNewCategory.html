@@ -23,6 +23,7 @@ p {
 			<form th:action="@{|${appUrl}/user/category/addNewCategory|}" method="post" class="d-flex flex-column gap-4"
 				th:object="${categoryRegisterDto}">
 				<div class="form-group d-flex flex-column">
+				<label class="form-label">Enter Category Name</label>
 					<input class="form-control" placeholder="Set the Catefory Name"
 						th:field="*{categoryName}">
 					<p th:if="${#fields.hasErrors('categoryName')}"
@@ -31,7 +32,7 @@ p {
 				<div class="d-flex justify-content-center gap-5">
 					<a class="btn btn-danger px-3"
 						th:href="${referer != null ? referer : '/shell/user/dashboard'}">Cancel</a>
-					<button class="btn btn-primary px-3">Create New Product</button>
+					<button class="btn btn-primary px-3">Create Category</button>
 				</div>
 			</form>
 		</div>

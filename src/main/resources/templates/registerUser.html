@@ -24,30 +24,35 @@ p {
 				<h2 class="card-title text-center">Register User</h2>
 				<div class="form-grp d-flex flex-column gap-4">
 					<div class="gourp d-flex flex-column">
+					<label class="form-label">Set User Name</label>
 						<input class="form-control" type="text"
 							placeholder="Set Your User Name" th:field="*{userName}">
 						<p th:if="${#fields.hasErrors('userName')}"
 							th:errors="*{userName}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Set User Email</label>
 						<input class="form-control" type="email"
 							placeholder="Set Your Email Address" th:field=*{userEmail}>
 						<p th:if="${#fields.hasErrors('userEmail')}"
 							th:errors="*{userEmail}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Set User Password</label>
 						<input class="form-control" type="password"
 							placeholder="Set Your Password" th:field="*{userPassword}">
 						<p th:if="${#fields.hasErrors('userPassword')}"
 							th:errors="*{userPassword}" th:errorclass="text-danger"></p>
 					</div>
 					<div class="group d-flex flex-column">
+					<label class="form-label">Re-Enter your Password</label>
 						<input class="form-control" type="text"
 							placeholder="Confirm Password"
 							name="passwordConfirm">
 						<p th:text="${passwordMissMatch}" class="text-danger"></p>
 					</div>
 					<div class="gropu d-flex flex-column">
+					<label class="form-label">Set Profile</label>
 						<input type="file" placeholder="Set your Profile Image"
 							name="userProfile" class="form-control">
 					</div>

@@ -1,5 +1,6 @@
 package com.project.shell.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,5 +17,7 @@ public interface AccountService {
 	public Optional<Account> findById(Long accountId);
 
 	public void deleteById(Long accountId);
+
+	public List<Account> findAllAccountsFromShell();
 
 }
