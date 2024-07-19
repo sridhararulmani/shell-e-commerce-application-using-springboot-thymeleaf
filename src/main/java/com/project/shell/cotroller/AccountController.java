@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.shell.component.ProfileImageGenerator;
 import com.project.shell.dto.AccountRegisterDto;
 import com.project.shell.dto.UpdateAccountInfoDto;
 import com.project.shell.entity.Account;
@@ -49,6 +50,9 @@ public class AccountController {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	@Autowired
+	private ProfileImageGenerator profileImageGenerator;
+
 	/* Registering Accounts */
 	@PostMapping("/register/user")
 	public String registerUser(@Valid @ModelAttribute AccountRegisterDto accountRegisterDto,
@@ -64,12 +68,17 @@ public class AccountController {
 
 		Account account = new Account();
 		account.getRoles().add(roleRepository.findByRole("ROLE_USER"));
-		
+
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
 		account.setUserPassword(passwordEncoder.encode(accountRegisterDto.getUserPassword()));
-		if (multipartFile != null) {
+		if (!multipartFile.isEmpty()) {
 			account.setUserProfile(multipartFile.getBytes());
+		} else {
+			System.out.println("Profile Generating...");
+			byte[] profileImage = profileImageGenerator.generateProfileImage(accountRegisterDto.getUserName());
+			account.setUserProfile(profileImage);
+			System.out.println(profileImage);
 		}
 		accountService.save(account);
 		return "redirect:" + appUrl + "/user/dashboard";
@@ -96,8 +105,13 @@ public class AccountController {
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
 		account.setUserPassword(passwordEncoder.encode(accountRegisterDto.getUserPassword()));
-		if (multipartFile != null) {
+		if (!multipartFile.isEmpty()) {
 			account.setUserProfile(multipartFile.getBytes());
+		} else {
+			System.out.println("Profile Generating...");
+			byte[] profileImage = profileImageGenerator.generateProfileImage(accountRegisterDto.getUserName());
+			account.setUserProfile(profileImage);
+			System.out.println(profileImage);
 		}
 		accountService.save(account);
 		return "redirect:" + appUrl + "/user/dashboard";
@@ -124,8 +138,13 @@ public class AccountController {
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
 		account.setUserPassword(passwordEncoder.encode(accountRegisterDto.getUserPassword()));
-		if (multipartFile != null) {
+		if (!multipartFile.isEmpty()) {
 			account.setUserProfile(multipartFile.getBytes());
+		} else {
+			System.out.println("Profile Generating...");
+			byte[] profileImage = profileImageGenerator.generateProfileImage(accountRegisterDto.getUserName());
+			account.setUserProfile(profileImage);
+			System.out.println(profileImage);
 		}
 		accountService.save(account);
 		return "redirect:" + appUrl + "/user/dashboard";
@@ -155,8 +174,13 @@ public class AccountController {
 		account.setUserName(accountRegisterDto.getUserName());
 		account.setUserEmail(accountRegisterDto.getUserEmail());
 		account.setUserPassword(passwordEncoder.encode(accountRegisterDto.getUserPassword()));
-		if (multipartFile != null) {
+		if (!multipartFile.isEmpty()) {
 			account.setUserProfile(multipartFile.getBytes());
+		} else {
+			System.out.println("Profile Generating...");
+			byte[] profileImage = profileImageGenerator.generateProfileImage(accountRegisterDto.getUserName());
+			account.setUserProfile(profileImage);
+			System.out.println(profileImage);
 		}
 		accountService.save(account);
 		return "redirect:" + appUrl + "/user/dashboard";
@@ -346,6 +370,15 @@ public class AccountController {
 		return "confirmMessage";
 	}
 
+	@GetMapping("/deleteProfilleImageById/{accountId}")
+	public String deleteProfileImageById(@RequestHeader(value = "referer", required = false) String referer,
+			@PathVariable(value = "accountId") Long accountId) {
+		Account account = accountService.findById(accountId).get();
+		account.setUserProfile(null);
+		accountService.save(account);
+		return "redirect:" + referer;
+	}
+
 	@PostMapping("/updateAccountInfo")
 	public String updateAccountInfo(@Valid @ModelAttribute UpdateAccountInfoDto updateAccountInfoDto,
 			BindingResult bindingResult, Model model, @AuthenticationPrincipal User user,
@@ -359,9 +392,13 @@ public class AccountController {
 			model.addAttribute("user", account);
 			return "updateAccountInfo";
 		}
-		if (!userProfile.isEmpty() && userProfile != null) {
-			System.out.println(userProfile.getOriginalFilename());
-			System.out.println(userProfile.getBytes());
+		if (account.getUserProfile() == null) {
+			System.out.println("Profile Generating...");
+			byte[] profileImage = profileImageGenerator.generateProfileImage(updateAccountInfoDto.getUserName());
+			account.setUserProfile(profileImage);
+			System.out.println(profileImage);
+		}
+		if (!userProfile.isEmpty()) {
 			account.setUserProfile(userProfile.getBytes());
 		}
 		if (!updateAccountInfoDto.getUserName().isEmpty() && updateAccountInfoDto.getUserName() != null) {

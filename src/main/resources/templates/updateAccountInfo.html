@@ -37,8 +37,15 @@ p {
 		<div
 			class="card border-0 bg-light rounded-4 d-flex flex-column gap-4 p-5 shadow">
 			<div class="card bg-light p-4 d-flex flex-row gap-5">
-				<img alt="Account Profile Picture" class="card-img"
-					th:src="@{/shell/user/getProfilePicture/{accountId}(accountId=${user.accountId})}">
+				<div class="d-flex flex-column gap-2">
+					<img alt="Account Profile Picture" class="card-img"
+						th:src="@{/shell/user/getProfilePicture/{accountId}(accountId=${user.accountId})}">
+					<div>
+						<a class="btn btn-sm btn-outline-danger px-3"
+							th:href="@{/shell/user/deleteProfilleImageById/{accountId}(accountId=${user.accountId})}">Remove
+							Profile</a>
+					</div>
+				</div>
 				<div class="d-flex flex-column gap-4">
 					<div class="d-flex flex-column">
 						<label class="card-sub-title">User Name :</label> <span
