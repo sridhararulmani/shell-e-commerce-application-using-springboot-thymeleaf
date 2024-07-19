@@ -71,30 +71,35 @@
 			</div>
 		</div>
 		<div class="reasent-news d-flex flex-column gap-5">
-			<div class="d-flex flex-row flex-wrap gap-5 justify-content-center">
+			<div class="d-flex flex-row flex-wrap gap-5 justify-content-center" th:if="${appDetails}">
 				<div
 					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
-					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${totalAccountCount}+'+'"></span>
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${totalAccountCount}+' +'"></span>
 					<label class="card-fotter text-nowrap fs-5 fw-bold">Total Account's</label>
 				</div>
 				<div
 					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
-					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${userCount}+'+'"></span>
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${productsCount}+' +'"></span>
+					<label class="card-fotter text-nowrap fs-5 fw-bold">Total Product's</label>
+				</div>
+				<div
+					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${userCount}+' +'"></span>
 					<label class="card-fotter text-nowrap fs-5 fw-bold">User's</label>
 				</div>
 				<div
 					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
-					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${sellerCount}+'+'"></span>
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${sellerCount}+' +'"></span>
 					<label class="card-fotter text-nowrap fs-5 fw-bold">Seller's</label>
 				</div>
 				<div
 					class="count-card card border-0 d-flex flex-column align-items-center justify-content-center gap-3">
-					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${adminCount}+'+'"></span>
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${adminCount}+' +'"></span>
 					<label class="card-fotter text-nowrap fs-5 fw-bold">Admin's</label>
 				</div>
 				<div
 					class="count-card card d-flex border-0 flex-column align-items-center justify-content-center gap-3">
-					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${managerCount}+'+'"></span>
+					<span class="bg-secondary text-white rounded-4 p-4 shadow border-0 fs-3 fw-bold" th:text="${managerCount}+' +'"></span>
 					<label class="card-fotter text-nowrap fs-5 fw-bold">Manager's</label>
 				</div>
 			</div>

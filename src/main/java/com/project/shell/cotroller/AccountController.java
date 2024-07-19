@@ -31,8 +31,10 @@ import com.project.shell.dto.AccountRegisterDto;
 import com.project.shell.dto.UpdateAccountInfoDto;
 import com.project.shell.entity.Account;
 import com.project.shell.entity.Role;
+import com.project.shell.repository.ProductRepository;
 import com.project.shell.repository.RoleRepository;
 import com.project.shell.service.AccountService;
+import com.project.shell.service.ProductService;
 
 import jakarta.validation.Valid;
 
@@ -54,7 +56,10 @@ public class AccountController {
 
 	@Autowired
 	private ProfileImageGenerator profileImageGenerator;
-
+	
+	@Autowired
+	private ProductService productService;
+	
 	/* Registering Accounts */
 	@PostMapping("/register/user")
 	public String registerUser(@Valid @ModelAttribute AccountRegisterDto accountRegisterDto,
@@ -270,7 +275,8 @@ public class AccountController {
 
 			List<Account> accounts = accountService.findAllAccountsFromShell();
 			int totalShellAccountsCount = accounts.size();
-
+			int productsCount = productService.findAllProducts().size();
+			
 			int userAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(userRoleOptional)).count();
 			int adminAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(adminRoleOptional)).count();
 			int sellerAccountCount = (int) accounts.stream().filter(a -> a.getRoles().contains(sellerRoleOptional)).count();
@@ -294,11 +300,13 @@ public class AccountController {
 				model.addAttribute("isManager", true);
 			}
 			if (currentUserRoles.contains(managerRoleOptional) || currentUserRoles.contains(adminRoleOptional)) {
+				model.addAttribute("appDetails", true);
 				model.addAttribute("totalAccountCount", totalShellAccountsCount);
 				model.addAttribute("userCount", userAccountCount);
 				model.addAttribute("sellerCount", sellerAccountCount);
 				model.addAttribute("adminCount", adminAccountCount);
 				model.addAttribute("managerCount", managerAccountCount);
+				model.addAttribute("productsCount", productsCount);
 			}
 			return "userDashboard";
 		}
